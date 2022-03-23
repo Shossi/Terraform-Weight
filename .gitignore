@@ -27,3 +27,9 @@ override.tf.json
 .terraform.lock.hcl
 # Include tfplan files to ignore the plan output of command: terraform plan -out=tfplan
 # example: *tfplan*
+# Data file with the .env file data
+web-pm2.sh
+# VM Password file
+secrets.tfvars
+secret.tf
+/Modules/vmss

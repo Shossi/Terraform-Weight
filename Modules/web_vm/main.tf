@@ -1,4 +1,5 @@
 resource "azurerm_network_interface" "NIC" {
+  # count               = var.instance_count
   name                = "NIC"
   location            = var.RG.location
   resource_group_name = var.RG.name
@@ -7,29 +8,30 @@ resource "azurerm_network_interface" "NIC" {
     name                          = "internal"
     subnet_id                     = var.subnet.id
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id = azurerm_public_ip.public_ip.id
+    public_ip_address_id          = azurerm_public_ip.public_ip.id
   }
 }
 resource "azurerm_public_ip" "public_ip" {
+  # count               = var.instance_count
   name                = "public-ip"
   resource_group_name = var.RG.name
   location            = var.RG.location
-  allocation_method   = "Dynamic"
-
-  tags = {
-    environment = "Development"
+  allocation_method   = "Static"
+  tags                = {
+    environment       = "Development"
   }
 }
 
 resource "azurerm_linux_virtual_machine" "Web_VM" {
-  name                = var.vm_name
-  resource_group_name = var.RG.name
-  location            = var.RG.location
-  size                = "Standard_B2s"
-  user_data = filebase64(var.user_data_file)
+  # count                           = var.instance_count
+  name                            = var.vm_name
+  resource_group_name             = var.RG.name
+  location                        = var.RG.location
+  size                            = "Standard_B2s"
+  user_data                       = filebase64(var.user_data_file)
   disable_password_authentication = "false"
-  admin_password = "E*4mp13"
-  admin_username      = "ubuntu"
+  admin_password                  = var.password
+  admin_username                  = "ubuntu"
 
   network_interface_ids = [
     azurerm_network_interface.NIC.id,

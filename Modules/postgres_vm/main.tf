@@ -18,7 +18,7 @@ resource "azurerm_linux_virtual_machine" "Web_VM" {
   size                = "Standard_B2s"
   user_data = filebase64(var.user_data_file)
   disable_password_authentication = "false"
-  admin_password = "E*4mp13"
+  admin_password = var.password
   admin_username      = "ubuntu"
 
   network_interface_ids = [
