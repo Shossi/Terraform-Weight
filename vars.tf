@@ -1,0 +1,3 @@
+variable "tag" {
+  default = "BootCamp"
+}

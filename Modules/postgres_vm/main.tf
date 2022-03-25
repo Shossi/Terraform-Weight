@@ -11,15 +11,15 @@ resource "azurerm_network_interface" "NIC" {
 }
 
 
-resource "azurerm_linux_virtual_machine" "Web_VM" {
-  name                = var.vm_name
-  resource_group_name = var.RG.name
-  location            = var.RG.location
-  size                = "Standard_B2s"
-  user_data = filebase64(var.user_data_file)
+resource "azurerm_linux_virtual_machine" "postgres_vm" {
+  name                            = var.vm_name
+  resource_group_name             = var.RG.name
+  location                        = var.RG.location
+  size                            = "Standard_B2s"
+  user_data                       = filebase64(var.user_data_file)
   disable_password_authentication = "false"
-  admin_password = var.password
-  admin_username      = "ubuntu"
+  admin_password                  = var.password
+  admin_username                  = "ubuntu"
 
   network_interface_ids = [
     azurerm_network_interface.NIC.id,
