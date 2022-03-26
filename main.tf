@@ -1,5 +1,5 @@
 module "network"{
-  source         = "./Modules/network"
+  source              = "./Modules/network"
   private_subnet_name = "${var.tag}-Private-Subnet"
   public_subnet_name  = "${var.tag}-Public-Subnet"
   rg_name             = "${var.tag}-ResourceGroup"
@@ -17,14 +17,13 @@ module "vmss" {
   user_data_file  = "./Datafile/web-pm2.sh"
 }
 
-module "Postgres_VMachine"{
-  source         = "./Modules/postgres_vm"
-  vm_name        = "${var.tag}-Postgres-VM"
-  nic_name       = "${var.tag}-private-nic"
-  RG             = module.network.Resource_Group
-  subnet         = module.network.Private_Subnet
-  user_data_file = "./Datafile/Postgres.sh"
-  password       = var.postgres_password
+module "Managed_postgres" {
+  source         = "./Modules/postgres_managed"
+  postgres_pass  = var.postgres_password
+  private_subnet = module.network.Private_Subnet
+  rg             = module.network.Resource_Group
+  tag            = var.tag
+  vnetwork       = module.network.Vnet
 }
 module "load_balancer" {
   source         = "./Modules/load_balancer"

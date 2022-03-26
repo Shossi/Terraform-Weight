@@ -1,3 +1,3 @@
 variable "tag" {
-  default = "BootCamp"
+  default = "bootcamp"
 }
