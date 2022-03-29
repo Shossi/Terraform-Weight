@@ -32,3 +32,4 @@ web-pm2.sh
 # VM Password file
 secrets.tfvars
 secret.tf
+*.plan
