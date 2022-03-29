@@ -8,8 +8,56 @@ This terraform template creates:
 * Managed Postgres service
 * Sends the terraform state file to a storage account
 
+##Modules:
+* __load balancer:</br>__
+Creates a load balancer, public ip, backend pool, rule and a health probe):
+```
+Health probe checks port 8080
+rule accepts traffic from port 8080 to 8080
+Uncomment nic backend pool assoc if using the a single vm module
+```
+* __network:__
+</br>Creates a Resource group, security group, Virtual network and 2 subnets
+```
+Security group has 4 rules;
+- allows http(8080) to the world
+- allows ssh(22) from the user to the public subnet(web)(change the ip to your own)
+- allows ssh(22) from the web application server to the db server
+- Denys every other connection to the DB subnet(private)
+2 subnets: one private and one public
+```
+* __managed postgres:__
+```
+Creates a dns server, postgresql flexible server
+```
+* __postgres virtual machine:__
+```
+Creates a NIC and a virtual machine without a public IP, uses datafile to install postgres using docker
+[remember to change the password in the file to your own]
+```
+* __web app virtual machine:__
+```
+Creates a nic, public ip and a virtual machine:
+- Count option is commented out to implement it you need to:
+- uncomment, and change the option at the lb module to work accordingly with a couple of instances and nic's
+```
 
-
+* __virtual machine scale set:__
+```
+Creates a vmss and an autoscaling rule:
+Default settings of the autoscaling rule is as follows:
+- Minimum machines: 3
+- Maximum machines: 10
+- CPU percentage to increase amount of machines: 75
+- CPU percentage to decrease amount of machines: 25
+Uses a datafile to configure the web application, but not completely, some actions are needed to run the application.
+```
+**Note:**
+```
+Running the application is not automatic, you still need to:
+change the IP sent to okta to the load balancer ip address in the env file.
+and run the commands at the end of the datafile that are commented out.
+```
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
