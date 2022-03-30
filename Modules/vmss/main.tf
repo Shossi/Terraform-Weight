@@ -1,5 +1,5 @@
 resource "azurerm_linux_virtual_machine_scale_set" "deployment" {
-  name                            = "buildagent-vmss"
+  name                            = "${var.tag}-vmss"
   resource_group_name             = var.RG.name
   location                        = var.RG.location
   sku                             = "Standard_B2s"
@@ -9,7 +9,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "deployment" {
   admin_username                  = "ubuntu"
   admin_password                  = var.password
   disable_password_authentication = false
-  user_data                       = filebase64(var.user_data_file)
+#  user_data                       = filebase64(var.user_data_file)
 
   source_image_reference {
     publisher = "canonical"
@@ -52,8 +52,8 @@ resource "azurerm_monitor_autoscale_setting" "vmss_scale_policy" {
     name = "defaultProfile"
 
     capacity {
-      default = 3
-      minimum = 3
+      default = var.instance_count
+      minimum = var.instance_count
       maximum = 10
     }
 

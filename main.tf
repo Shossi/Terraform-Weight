@@ -1,33 +1,45 @@
+locals {workspace = terraform.workspace}
+locals {tag = "${local.workspace}-${var.tag}"}
+
+module "ansible_master_vm" {
+  source = "./Modules/web_vm"
+  RG     = module.network.Resource_Group
+  nic_name = "${var.tag}-${local.workspace}-ansible-nic"
+  password = random_password.ansible_password.result
+  subnet = module.network.Public_Subnet
+  vm_name = "${var.tag}-${local.workspace}-ansible-master"
+  user_data_file = "./DataFile/ansible.sh"
+}
 module "network"{
   source              = "./Modules/network"
-  private_subnet_name = "${var.tag}-Private-Subnet"
-  public_subnet_name  = "${var.tag}-Public-Subnet"
-  rg_name             = "${var.tag}-ResourceGroup"
-  sg_name             = "${var.tag}-SecurityGroup"
-  vnet_name           = "${var.tag}-VirtualNetwork"
+  private_subnet_name = "${local.tag}-Private-Subnet"
+  public_subnet_name  = "${local.tag}}-Public-Subnet"
+  rg_name             = "${local.tag}-ResourceGroup"
+  sg_name             = "${local.tag}-SecurityGroup"
+  vnet_name           = "${local.tag}-VirtualNetwork"
 }
 module "vmss" {
   source          = "./Modules/vmss"
   RG              = module.network.Resource_Group
-  instance_count  = "3"
+  instance_count  = "2"
   lb_backend      = module.load_balancer.lb_backend
-  password        = var.web_password
+  password        = random_password.web_password.result
   subnet          = module.network.Public_Subnet
-  tag             = var.tag
-  user_data_file  = "./Datafile/web-pm2.sh"
+  tag             = local.tag
+#  user_data_file  = "./Datafile/web-pm2.sh"
 }
 
 module "Managed_postgres" {
   source         = "./Modules/postgres_managed"
-  postgres_pass  = var.postgres_password
+  postgres_pass  = random_password.postgres_password.result
   private_subnet = module.network.Private_Subnet
   rg             = module.network.Resource_Group
-  tag            = var.tag
+  tag            = local.tag
   vnetwork       = module.network.Vnet
 }
 module "load_balancer" {
   source         = "./Modules/load_balancer"
-  LB_name        = "${var.tag}-LB"
+  LB_name        = "${local.tag}-LB"
   RG             = module.network.Resource_Group
 #  vm_nic         = module.vmss.nic
   Vnetwork       = module.network.Vnet

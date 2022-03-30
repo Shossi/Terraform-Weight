@@ -30,6 +30,17 @@ security_rule {
     destination_address_prefix = "10.0.0.0/24"
   }
   security_rule {
+    name                       = "Allow SSH for Ansible master"
+    priority                   = 120
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "*"
+    source_port_range          = "*"
+    destination_port_range     = "22"
+    source_address_prefix      = "10.0.0.0/24"
+    destination_address_prefix = "10.0.0.0/24"
+  }
+  security_rule {
     name                       = "Allow access to DB from the web vm"
     priority                   = 130
     direction                  = "Inbound"
