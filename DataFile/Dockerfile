@@ -8,7 +8,7 @@ COPY package*.json ./
 RUN npm install
 # Bundle app source
 # Copy folder contents
-COPY . .
+COPY .. .
 # initializing npm
 RUN npm init -y
 # initializing the database part of the env file

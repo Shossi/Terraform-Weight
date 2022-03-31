@@ -1,0 +1,31 @@
+---
+- hosts: servers
+  become: yes
+  gather_facts: yes
+  tasks:
+    - name: Run the equivalent of "apt-get update" as a separate step
+      apt:
+        update_cache: yes
+
+    - name: "Install docker"
+        apt:
+          update_cache: yes
+          name: docker.io
+          state: present
+
+    - name: Start docker service
+        become: true
+        service:
+          name: docker
+          state: started
+          enabled: yes
+
+    - name: Pull an image
+        become: true
+        docker_image:
+          name: joeyhd/weight_tracker
+          source: pull
+
+    - name: Start weatherapi container
+      become: true
+      shell: "docker run -d --restart=always -p 8080:8080 joeyhd/weatherapi "

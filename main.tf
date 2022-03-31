@@ -1,19 +1,18 @@
-locals {workspace = terraform.workspace}
-locals {tag = "${local.workspace}-${var.tag}"}
+locals {tag = "${terraform.workspace}-${var.tag}"}
 
 module "ansible_master_vm" {
-  source = "./Modules/web_vm"
-  RG     = module.network.Resource_Group
-  nic_name = "${var.tag}-${local.workspace}-ansible-nic"
-  password = random_password.ansible_password.result
-  subnet = module.network.Public_Subnet
-  vm_name = "${var.tag}-${local.workspace}-ansible-master"
+  source         = "./Modules/web_vm"
+  RG             = module.network.Resource_Group
+  nic_name       = "${local.tag}-ansible-nic"
+  password       = random_password.ansible_password.result
+  subnet         = module.network.Public_Subnet
+  vm_name        = "${local.tag}-ansible-master"
   user_data_file = "./DataFile/ansible.sh"
 }
 module "network"{
   source              = "./Modules/network"
   private_subnet_name = "${local.tag}-Private-Subnet"
-  public_subnet_name  = "${local.tag}}-Public-Subnet"
+  public_subnet_name  = "${local.tag}-Public-Subnet"
   rg_name             = "${local.tag}-ResourceGroup"
   sg_name             = "${local.tag}-SecurityGroup"
   vnet_name           = "${local.tag}-VirtualNetwork"
@@ -21,7 +20,7 @@ module "network"{
 module "vmss" {
   source          = "./Modules/vmss"
   RG              = module.network.Resource_Group
-  instance_count  = "2"
+  instance_count  = var.instance_count
   lb_backend      = module.load_balancer.lb_backend
   password        = random_password.web_password.result
   subnet          = module.network.Public_Subnet
@@ -41,6 +40,5 @@ module "load_balancer" {
   source         = "./Modules/load_balancer"
   LB_name        = "${local.tag}-LB"
   RG             = module.network.Resource_Group
-#  vm_nic         = module.vmss.nic
   Vnetwork       = module.network.Vnet
 }
