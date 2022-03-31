@@ -7,7 +7,7 @@ module "ansible_master_vm" {
   password       = random_password.ansible_password.result
   subnet         = module.network.Public_Subnet
   vm_name        = "${local.tag}-ansible-master"
-  user_data_file = "./DataFile/ansible.sh"
+  user_data_file = "./DataFile/${terraform.workspace}-ansible.sh"
 }
 module "network"{
   source              = "./Modules/network"
