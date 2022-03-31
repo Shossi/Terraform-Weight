@@ -29,12 +29,9 @@ override.tf.json
 # example: *tfplan*
 # Data file with the .env file data
 web-pm2.sh
-ansible.sh
+prod-ansible.sh
+staging-ansible.sh
 # VM Password file
 secrets.tfvars
 secret.tf
 *.plan
-prod-ansible.sh
-staging-ansible.sh
-./DataFile/staging-ansible.sh
-./DataFile/prod-ansible.sh
