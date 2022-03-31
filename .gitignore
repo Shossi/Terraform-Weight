@@ -34,4 +34,5 @@ ansible.sh
 secrets.tfvars
 secret.tf
 *.plan
-./DataFile/ansible.sh
+./DataFile/staging-ansible.sh
+./DataFile/prod-ansible.sh
