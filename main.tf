@@ -16,6 +16,7 @@ module "network"{
   rg_name             = "${local.tag}-ResourceGroup"
   sg_name             = "${local.tag}-SecurityGroup"
   vnet_name           = "${local.tag}-VirtualNetwork"
+  location            = var.location
 }
 module "vmss" {
   source          = "./Modules/vmss"

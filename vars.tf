@@ -3,3 +3,4 @@ variable "tag" {
   description = "Prefix used for all the resources"
 }
 variable "instance_count" {}
+variable "location" {}

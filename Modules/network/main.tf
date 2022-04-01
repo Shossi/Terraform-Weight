@@ -1,6 +1,6 @@
 resource "azurerm_resource_group" "Boot" { # Creating a resource group
   name     = var.rg_name
-  location = "West US 3"
+  location = var.location
 }
 
 resource "azurerm_network_security_group" "SG" { # Create a security group
