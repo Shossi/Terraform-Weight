@@ -8,6 +8,22 @@ This terraform template creates:
 * Managed Postgres service
 * Sends the terraform state file to a storage account
 
+Commands to run:
+```
+terraform workspace select staging
+terraform plan -out staging.plan -var-file staging.tfvars
+terraform apply
+terraform workspace select prod
+terraform plan -out prod.plan -var-file prod.tfvars
+terraform apply
+```
+Commands to run in order to get the passwords after apply:
+```
+terraform output ansible_pass
+terraform output web_pass
+terraform output postgres_pass
+```
+
 ##Modules:
 * __load balancer:</br>__
 Creates a load balancer, public ip, backend pool, rule and a health probe):
@@ -58,6 +74,7 @@ Running the application is not automatic, you still need to:
 change the IP sent to okta to the load balancer ip address in the env file.
 and run the commands at the end of the datafile that are commented out.
 ```
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
@@ -67,34 +84,42 @@ and run the commands at the end of the datafile that are commented out.
 
 ## Providers
 
-No providers.
+| Name | Version |
+|------|---------|
+| <a name="provider_random"></a> [random](#provider\_random) | 3.1.2 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_Managed_postgres"></a> [Managed\_postgres](#module\_Managed\_postgres) | ./Modules/postgres_managed | n/a |
+| <a name="module_ansible_master_vm"></a> [ansible\_master\_vm](#module\_ansible\_master\_vm) | ./Modules/web_vm | n/a |
 | <a name="module_load_balancer"></a> [load\_balancer](#module\_load\_balancer) | ./Modules/load_balancer | n/a |
 | <a name="module_network"></a> [network](#module\_network) | ./Modules/network | n/a |
 | <a name="module_vmss"></a> [vmss](#module\_vmss) | ./Modules/vmss | n/a |
 
 ## Resources
 
-No resources.
+| Name | Type |
+|------|------|
+| [random_password.ansible_password](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
+| [random_password.postgres_password](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
 
 ## Inputs
 
-| Name | Description | Type | Default      | Required |
-|------|-------------|------|--------------|:--------:|
-| <a name="input_postgres_password"></a> [postgres\_password](#input\_postgres\_password) | Postgres password | `string` | `"***"`      | no |
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_instance_count"></a> [instance\_count](#input\_instance\_count) | n/a | `any` | n/a | yes |
+| <a name="input_location"></a> [location](#input\_location) | n/a | `any` | n/a | yes |
 | <a name="input_tag"></a> [tag](#input\_tag) | Prefix used for all the resources | `string` | `"bootcamp"` | no |
-| <a name="input_web_password"></a> [web\_password](#input\_web\_password) | Webapp server password | `string` | `"***"`      | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| <a name="output_Web_Pass"></a> [Web\_Pass](#output\_Web\_Pass) | n/a |
+| <a name="output_ansible_ip"></a> [ansible\_ip](#output\_ansible\_ip) | n/a |
+| <a name="output_ansible_pass"></a> [ansible\_pass](#output\_ansible\_pass) | n/a |
 | <a name="output_lb_ip"></a> [lb\_ip](#output\_lb\_ip) | n/a |
 | <a name="output_postgres_pass"></a> [postgres\_pass](#output\_postgres\_pass) | n/a |
+| <a name="output_web_pass"></a> [web\_pass](#output\_web\_pass) | n/a |
 <!-- END_TF_DOCS -->

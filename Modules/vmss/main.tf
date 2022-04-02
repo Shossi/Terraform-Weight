@@ -1,3 +1,8 @@
+resource "random_password" "web_password" {
+  length           = 16
+  special          = false
+}
+
 resource "azurerm_linux_virtual_machine_scale_set" "deployment" {
   name                            = "${var.tag}-vmss"
   resource_group_name             = var.RG.name
@@ -7,9 +12,10 @@ resource "azurerm_linux_virtual_machine_scale_set" "deployment" {
   overprovision                   = false
   single_placement_group          = false
   admin_username                  = "ubuntu"
-  admin_password                  = var.password
+  admin_password                  = random_password.web_password.result
   disable_password_authentication = false
 #  user_data                       = filebase64(var.user_data_file)
+  depends_on = [random_password.web_password]
 
   source_image_reference {
     publisher = "canonical"

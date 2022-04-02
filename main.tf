@@ -23,7 +23,7 @@ module "vmss" {
   RG              = module.network.Resource_Group
   instance_count  = var.instance_count
   lb_backend      = module.load_balancer.lb_backend
-  password        = random_password.web_password.result
+#  password        = random_password.web_password.result
   subnet          = module.network.Public_Subnet
   tag             = local.tag
 #  user_data_file  = "./Datafile/web-pm2.sh"

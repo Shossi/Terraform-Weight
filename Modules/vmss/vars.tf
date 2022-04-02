@@ -1,6 +1,6 @@
 variable "instance_count" {}
 variable "RG" {}
-variable "password" {}
+#variable "password" {}
 #variable "user_data_file" {}
 variable "tag" {}
 variable "subnet" {}
