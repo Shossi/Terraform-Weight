@@ -31,9 +31,9 @@ resource "azurerm_linux_virtual_machine_scale_set" "deployment" {
       load_balancer_backend_address_pool_ids = [var.lb_backend.id]
       name      = "${var.tag}-vmss-ip-config"
       primary   = true
-      public_ip_address {
-        name = "${var.tag}vmss_ip"
-      }
+#      public_ip_address {          >> Removes
+#        name = "${var.tag}vmss_ip" >> Public IP
+#      }                            >> Association and creation
       subnet_id = var.subnet.id
     }
   }

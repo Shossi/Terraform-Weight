@@ -1,10 +1,6 @@
-1. edit inv.ini vars adding the new password and changing the ip's if needed.
+1. edit inv.ini vars adding the passwords and changing the ip's if needed.
 Note: in prod env remember to un comment and add the third machine's ip
 2. edit .env file with the right password, lb_ip and okta configuration
-3. copy worker.yaml file to the ansible master vm
-4. run `Docker build --tag joeyhd/(prod-weight)(staging-weight) .`
-5. `docker login`
-6. run `Docker push joeyhd/(prod-weight)(staging-weight)
-7. cd to the ansible dir
+3. run host.yaml to build and push docker image
 8. run `ansible-playbook worker.yaml -i inv.ini`
 9. go make some tea and relax :)
