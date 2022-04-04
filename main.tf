@@ -43,3 +43,11 @@ module "load_balancer" {
   RG             = module.network.Resource_Group
   Vnetwork       = module.network.Vnet
 }
+resource "local_file" "ansible_vars" {
+  filename = "${path.module}/DataFile/${terraform.workspace}-vars.ini"
+  content  = ["lb_ip=${module.load_balancer.lb_ip}",
+              "web_pass=${module.vmss.password}",
+              "postgres_pass=${module.Managed_postgres.password}"
+  ]
+
+}

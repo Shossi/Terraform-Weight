@@ -35,3 +35,4 @@ staging-ansible.sh
 secrets.tfvars
 secret.tf
 *.plan
+vars.ini
