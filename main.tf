@@ -43,11 +43,19 @@ module "load_balancer" {
   RG             = module.network.Resource_Group
   Vnetwork       = module.network.Vnet
 }
-resource "local_file" "ansible_vars" {
-  filename = "${path.module}/DataFile/${terraform.workspace}-vars.ini"
-  content  = ["lb_ip=${module.load_balancer.lb_ip}",
-              "web_pass=${module.vmss.password}",
-              "postgres_pass=${module.Managed_postgres.password}"
+resource "local_file" "test" {
+  filename = "./${terraform.workspace}-vars.txt"
+  depends_on = [
+  module.vmss,
+  module.Managed_postgres,
+  module.load_balancer,
+  module.ansible_master_vm
   ]
-
+  content = <<-EOT
+  ${terraform.workspace}_ansible_ip=${module.ansible_master_vm.ansible_ip}
+  ${terraform.workspace}_postgres_pass=${module.Managed_postgres.password}
+  ${terraform.workspace}_web_pass=${module.vmss.password}
+  ${terraform.workspace}_ansible_pass=${module.ansible_master_vm.password}
+  ${terraform.workspace}_lb_ip=${module.load_balancer.lb_ip}
+EOT
 }

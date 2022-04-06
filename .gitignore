@@ -36,3 +36,4 @@ secrets.tfvars
 secret.tf
 *.plan
 vars.ini
+*-vars.txt
