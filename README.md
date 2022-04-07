@@ -1,4 +1,4 @@
-# Terraform-Weight
+# Terraform-Weight.
 This terraform template creates: 
 * 1 Virtual Network
 * 2 Subnets (1 public and 1 private)
