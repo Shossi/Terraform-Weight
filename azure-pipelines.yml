@@ -3,7 +3,7 @@ trigger:
 
 resources:
 - repo: self
-  clean: false
+  clean: true
 
 stages:
 - stage: Terraform_CI
@@ -14,14 +14,6 @@ stages:
     pool:
       name: Host
     steps:
-    - task: TerraformTaskV2@2
-      displayName: 'Terraform init (Backend State)'
-      inputs:
-        backendServiceArm: 'Azure Pass - Sponsorship (4f4be271-bdd8-44e4-9825-bfdfbc87d62a)'
-        backendAzureRmResourceGroupName: tfstate
-        backendAzureRmStorageAccountName: tfstatejoey
-        backendAzureRmContainerName: tfstate
-        backendAzureRmKey: tf/staging.tfstate
     - task: PowerShell@2
       inputs:
         targetType: 'inline'
@@ -30,17 +22,14 @@ stages:
           terraform workspace select staging
       continueOnError: true
       displayName: 'Create new terraform workspace (staging)'
-    # - task: PowerShell@2
-    #   inputs:
-    #     targetType: 'inline'
-    #     script: |
-    #       # Write your PowerShell commands here.
-          
-    #       terraform workspace new staging
-                    
-    #       terraform workspace select staging
-    #     errorActionPreference: 'continue'
-    
+    - task: TerraformTaskV2@2
+      displayName: 'Terraform init (Backend State - staging)'
+      inputs:
+        backendServiceArm: 'Azure Pass - Sponsorship (4f4be271-bdd8-44e4-9825-bfdfbc87d62a)'
+        backendAzureRmResourceGroupName: tfstate
+        backendAzureRmStorageAccountName: tfstatejoey
+        backendAzureRmContainerName: tfstate
+        backendAzureRmKey: tf/staging.tfstate
     - task: TerraformTaskV2@2
       displayName: 'terraform plan'
       inputs:
@@ -63,7 +52,51 @@ stages:
         backendAzureRmResourceGroupName: tfstate
         backendAzureRmStorageAccountName: tfstatejoey
         backendAzureRmContainerName: tfstate
-        backendAzureRmKey: tf/terraform.tfstate
+        backendAzureRmKey: tf/staging.tfstate
     
     - powershell: 'cat staging-vars.txt'
-      displayName: 'Print '
+      displayName: 'Print staging vars'
+
+#####################################################
+    - task: PowerShell@2
+      inputs:
+        targetType: 'inline'
+        script: |
+          terraform workspace new prod
+          terraform workspace select prod
+      continueOnError: true
+      displayName: 'Create new terraform workspace (prod)'
+    - task: TerraformTaskV2@2
+      displayName: 'Terraform init (Backend State - prod)'
+      inputs:
+        backendServiceArm: 'Azure Pass - Sponsorship (4f4be271-bdd8-44e4-9825-bfdfbc87d62a)'
+        backendAzureRmResourceGroupName: tfstate
+        backendAzureRmStorageAccountName: tfstatejoey
+        backendAzureRmContainerName: tfstate
+        backendAzureRmKey: tf/prod.tfstate
+    - task: TerraformTaskV2@2
+      displayName: 'terraform plan'
+      inputs:
+        provider: azurerm
+        command: plan
+        commandOptions: '-out=prod.plan -var-file=prod.tfvars'
+        environmentServiceNameAzureRM: 'Azure Pass - Sponsorship (4f4be271-bdd8-44e4-9825-bfdfbc87d62a)'
+        backendServiceArm: 'Azure Pass - Sponsorship (4f4be271-bdd8-44e4-9825-bfdfbc87d62a)'
+        backendAzureRmResourceGroupName: tfstate
+        backendAzureRmStorageAccountName: tfstatejoey
+        backendAzureRmContainerName: tfstate
+        backendAzureRmKey: tf/prod.tfstate
+    - task: TerraformTaskV2@2
+      displayName: 'terraform validate and apply'
+      inputs:
+        command: apply
+        commandOptions: prod.plan
+        environmentServiceNameAzureRM: 'Azure Pass - Sponsorship (4f4be271-bdd8-44e4-9825-bfdfbc87d62a)'
+        backendServiceArm: 'Azure Pass - Sponsorship (4f4be271-bdd8-44e4-9825-bfdfbc87d62a)'
+        backendAzureRmResourceGroupName: tfstate
+        backendAzureRmStorageAccountName: tfstatejoey
+        backendAzureRmContainerName: tfstate
+        backendAzureRmKey: tf/prod.tfstate
+    
+    - powershell: 'cat prod-vars.txt'
+      displayName: 'Print prod vars'
