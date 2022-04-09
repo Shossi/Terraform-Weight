@@ -3,6 +3,7 @@ trigger:
 
 resources:
 - repo: self
+  clean: false
 
 stages:
 - stage: Terraform_CI
