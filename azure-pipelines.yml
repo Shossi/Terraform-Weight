@@ -18,6 +18,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
+          terraform init
           terraform workspace new staging
           terraform workspace select staging
       continueOnError: true
@@ -62,6 +63,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
+          terraform init
           terraform workspace new prod
           terraform workspace select prod
       continueOnError: true
