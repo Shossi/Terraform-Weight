@@ -14,7 +14,7 @@ stages:
   - job: Build
     displayName: Build
     pool:
-      vmImage: Host
+      name: Host
     steps:
     - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2
       displayName: 'Terraform init (Backend State)'
