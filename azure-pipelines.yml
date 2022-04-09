@@ -21,15 +21,15 @@ stages:
         backendAzureRmStorageAccountName: tfstatejoey
         backendAzureRmContainerName: tfstate
         backendAzureRmKey: tf/staging.tfstate
-    
-    - script: |
-        pwd
-        terraform workspace new staging
-        terraform workspace select staging
-        displayName: 'Create new terraform workspace (staging)'
-        continueOnError: true
-      displayName: Creating a workspace (staging)
-  
+    - task: PowerShell@2
+      inputs:
+        targetType: 'inline'
+        script: |
+          pwd
+          terraform workspace new staging
+          terraform workspace select staging
+      continueOnError: true
+      displayName: 'Create new terraform workspace (staging)'
     
     - task: TerraformTaskV2@2
       displayName: 'terraform plan'
