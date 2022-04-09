@@ -22,9 +22,6 @@ stages:
         backendAzureRmContainerName: tfstate
         backendAzureRmKey: tf/staging.tfstate
     
-  - job: Workspace_Creation
-    displayName: Workspace_Creation
-    steps:
     - script: |
         terraform workspace new staging
         terraform workspace select staging
@@ -32,9 +29,6 @@ stages:
         continueOnError: true
   
     
-  - job: Terraform_plan
-    displayName: Terraform plan
-    steps:  
     - task: TerraformTaskV2@2
       displayName: 'terraform plan'
       inputs:
