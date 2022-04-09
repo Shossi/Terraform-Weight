@@ -35,9 +35,15 @@ stages:
         continueOnError: true
   
     
-    - task: TerraformTaskV2@2
+    
+    - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2
+      displayName: 'terraform plan'
       inputs:
-      provider: 'azurerm'
-      command: 'plan'
-      commandOptions: '-out=staging.plan -var-file=staging.tfvars'
-      environmentServiceNameAzureRM: 'Azure Pass - Sponsorship (4f4be271-bdd8-44e4-9825-bfdfbc87d62a)'
+        command: plan
+        commandOptions: '-out=staging.plan -var-file=staging.tfvars'
+        environmentServiceNameAzureRM: 'Azure Pass - Sponsorship (4f4be271-bdd8-44e4-9825-bfdfbc87d62a)'
+        backendServiceArm: 'Azure Pass - Sponsorship (4f4be271-bdd8-44e4-9825-bfdfbc87d62a)'
+        backendAzureRmResourceGroupName: tfstate
+        backendAzureRmStorageAccountName: tfstatejoey
+        backendAzureRmContainerName: tfstate
+        backendAzureRmKey: tf/terraform.tfstate
