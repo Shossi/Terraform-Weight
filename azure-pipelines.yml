@@ -8,8 +8,8 @@ stages:
 - stage: Terraform_CI
   displayName: Terraform CI
   jobs:
-  - job: Terraform_init
-    displayName: Terraform init
+  - job: Staging_infra
+    displayName: Staging_infra
     pool:
       name: Host
     steps:
@@ -27,6 +27,7 @@ stages:
         terraform workspace select staging
         displayName: 'Create new terraform workspace (staging)'
         continueOnError: true
+      displayName: Creating a workspace (staging)
   
     
     - task: TerraformTaskV2@2
