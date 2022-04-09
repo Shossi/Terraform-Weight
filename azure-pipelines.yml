@@ -4,19 +4,16 @@ trigger:
 resources:
 - repo: self
 
-variables:
-  tag: '$(Build.BuildId)'
-
 stages:
-- stage: Build
-  displayName: Build image
+- stage: Terraform CI
+  displayName: Terraform CI
   jobs:
-  - job: Build
-    displayName: Build
+  - job: Terraform_init
+    displayName: Terraform init
     pool:
       name: Host
     steps:
-    - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2
+    - task: TerraformTaskV2@2
       displayName: 'Terraform init (Backend State)'
       inputs:
         backendServiceArm: 'Azure Pass - Sponsorship (4f4be271-bdd8-44e4-9825-bfdfbc87d62a)'
@@ -25,8 +22,8 @@ stages:
         backendAzureRmContainerName: tfstate
         backendAzureRmKey: tf/staging.tfstate
     
-  - job: Build
-    displayName: Build
+  - job: Workspace_Creation
+    displayName: Workspace_Creation
     steps:
     - script: |
         terraform workspace new staging
@@ -35,10 +32,13 @@ stages:
         continueOnError: true
   
     
-    
-    - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2
+  - job: Terraform_plan
+    displayName: Terraform plan
+    steps:  
+    - task: TerraformTaskV2@2
       displayName: 'terraform plan'
       inputs:
+        provider: azurerm
         command: plan
         commandOptions: '-out=staging.plan -var-file=staging.tfvars'
         environmentServiceNameAzureRM: 'Azure Pass - Sponsorship (4f4be271-bdd8-44e4-9825-bfdfbc87d62a)'
@@ -47,3 +47,4 @@ stages:
         backendAzureRmStorageAccountName: tfstatejoey
         backendAzureRmContainerName: tfstate
         backendAzureRmKey: tf/terraform.tfstate
+      
