@@ -4,7 +4,7 @@ trigger:
 resources:
 - repo: self
   clean: true
-
+### Apply staging
 stages:
 - stage: Terraform_CI
   displayName: Terraform CI
@@ -57,15 +57,15 @@ stages:
     - powershell: 'cat staging-vars.txt'
       displayName: 'Print staging vars'
 
-#####################################################
-    - task: TerraformTaskV2@2
-      displayName: 'Terraform init (Backend State - prod)'
-      inputs:
-        backendServiceArm: 'Azure Pass - Sponsorship (4f4be271-bdd8-44e4-9825-bfdfbc87d62a)'
-        backendAzureRmResourceGroupName: tfstate
-        backendAzureRmStorageAccountName: tfstatejoey
-        backendAzureRmContainerName: tfstate
-        backendAzureRmKey: tf/prod.tfstate
+# ##################################################### > apply prod <
+#     - task: TerraformTaskV2@2
+#       displayName: 'Terraform init (Backend State - prod)'
+#       inputs:
+#         backendServiceArm: 'Azure Pass - Sponsorship (4f4be271-bdd8-44e4-9825-bfdfbc87d62a)'
+#         backendAzureRmResourceGroupName: tfstate
+#         backendAzureRmStorageAccountName: tfstatejoey
+#         backendAzureRmContainerName: tfstate
+#         backendAzureRmKey: tf/prod.tfstate
     - task: PowerShell@2
       inputs:
         targetType: 'inline'
