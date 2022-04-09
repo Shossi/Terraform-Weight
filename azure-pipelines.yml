@@ -5,7 +5,7 @@ resources:
 - repo: self
 
 stages:
-- stage: Terraform CI
+- stage: Terraform_CI
   displayName: Terraform CI
   jobs:
   - job: Terraform_init
