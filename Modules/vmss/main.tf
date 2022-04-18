@@ -1,6 +1,9 @@
 resource "random_password" "web_password" {
   length           = 16
   special          = false
+  lower            = true
+  upper            = true
+  number           = true
 }
 
 resource "azurerm_linux_virtual_machine_scale_set" "deployment" {

@@ -8,6 +8,7 @@ module "ansible_master_vm" {
   subnet         = module.network.Public_Subnet
   vm_name        = "${local.tag}-ansible-master"
   user_data_file = "./DataFile/ansible.sh"
+  depends_on = [random_password.ansible_password]
 }
 module "network"{
   source              = "./Modules/network"

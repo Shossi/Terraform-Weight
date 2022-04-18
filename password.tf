@@ -5,8 +5,14 @@
 resource "random_password" "postgres_password" {
   length           = 16
   special          = false
+  lower            = true
+  upper            = true
+  number           = true
 }
 resource "random_password" "ansible_password" {
   length           = 16
   special          = false
+  lower            = true
+  upper            = true
+  number           = true
 }
