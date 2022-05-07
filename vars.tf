@@ -2,5 +2,5 @@ variable "tag" {
   default = "bootcamp"
   description = "Prefix used for all the resources"
 }
-variable "instance_count" {}
-variable "location" {}
+#variable "instance_count" {}
+#variable "location" {}
